@@ -26,6 +26,8 @@ class Logger {
         $timestamp = date('Y-m-d H:i:s');
         $logMessage = "[{$timestamp}] {$level}: {$message}" . PHP_EOL;
         
+        // 使用UTF-8编码写入文件
         file_put_contents(self::$logFile, $logMessage, FILE_APPEND | LOCK_EX);
     }
 }
+?>

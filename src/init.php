@@ -12,9 +12,6 @@ $config = require __DIR__ . '/config.php';
 // 设置错误日志路径
 ini_set('error_log', $config['log_file']);
 
-// 初始化日志记录器
-Logger::init($config['log_file']);
-
 // 自动加载类文件
 spl_autoload_register(function ($class) {
     $paths = [
@@ -31,6 +28,9 @@ spl_autoload_register(function ($class) {
         }
     }
 });
+
+// 初始化日志记录器（在自动加载之后）
+Logger::init($config['log_file']);
 
 // 返回配置
 return $config;
