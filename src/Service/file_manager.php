@@ -2,13 +2,17 @@
 class FileManager {
     private $storageDir;
     private $encryption;
+    private $config;
 
     public function __construct($storageDir, $encryption) {
         $this->storageDir = $storageDir;
         $this->encryption = $encryption;
+        $this->config = require __DIR__ . '/../config.php';
 
         if (!is_dir($this->storageDir)) {
-            mkdir($this->storageDir, 0755, true);
+            if (!mkdir($this->storageDir, 0755, true)) {
+                throw new Exception("无法创建存储目录: " . $this->storageDir);
+            }
         }
     }
 
@@ -37,13 +41,13 @@ class FileManager {
     }
 
     private function validateFile($file) {
-        $config = require __DIR__ . '/../config.php';
-        if ($file['size'] > $config['max_file_size']) {
-            throw new Exception("文件大小超过限制（最大" . floor($config['max_file_size'] / 1024 / 1024) . "MB）");
+        // 使用已加载的配置，避免重复加载
+        if ($file['size'] > $this->config['max_file_size']) {
+            throw new Exception("文件大小超过限制（最大" . floor($this->config['max_file_size'] / 1024 / 1024) . "MB）");
         }
 
         $fileExtension = pathinfo($file['name'], PATHINFO_EXTENSION);
-        if (!in_array(strtolower($fileExtension), $config['allowed_extensions'])) {
+        if (!in_array(strtolower($fileExtension), $this->config['allowed_extensions'])) {
             throw new Exception("不支持的文件类型");
         }
 
@@ -233,6 +237,10 @@ class FileManager {
         return $pagedFiles;
     }
 }
+
+
+
+
 
 
 

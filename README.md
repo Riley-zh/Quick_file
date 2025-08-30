@@ -11,6 +11,7 @@ Quick_file/
 │   ├── index.php           # API入口文件
 │   └── favicon.ico         # 网站图标
 ├── src/                    # 源代码目录
+│   ├── init.php            # 初始化文件
 │   ├── config.php          # 配置文件
 │   ├── Controller/         # 控制器目录
 │   │   ├── upload.php      # 文件上传处理
@@ -18,8 +19,10 @@ Quick_file/
 │   │   ├── delete.php      # 文件删除处理
 │   │   └── list.php        # 文件列表处理
 │   ├── Service/            # 服务层目录
-│   │   ├── file_manager.php# 文件管理服务
-│   │   └── encryption.php  # 加密服务
+│   │   ├── FileManager.php # 文件管理服务
+│   │   ├── Encryption.php  # 加密服务
+│   │   ├── ResponseHandler.php # 响应处理类
+│   │   └── Logger.php      # 日志记录类
 │   └── Model/              # 模型目录（预留）
 ├── storage/                # 存储目录
 │   ├── data/               # 文件存储目录
@@ -34,6 +37,18 @@ Quick_file/
 - 文件列表展示
 - 文件删除
 - 文件加密存储
+- 文件搜索
+- 分页显示
+- 进度条显示
+- 响应式设计
+
+## 技术特点
+- 采用标准MVC架构模式
+- 统一的错误处理和响应格式
+- 完善的日志记录机制
+- 文件类型和大小验证
+- AES-256加密存储
+- RESTful API设计
 
 ## 环境要求
 - PHP 7.x 或以上版本
@@ -56,3 +71,4 @@ Quick_file/
 - 所有文件元数据均经过AES-256加密存储
 - 支持文件类型和大小限制
 - 上传文件名经过安全过滤
+- 统一的错误处理，避免信息泄露

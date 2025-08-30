@@ -1,5 +1,9 @@
 <?php
 // 简化API访问的路由文件
+
+// 加载初始化文件
+require_once __DIR__ . '/../src/init.php';
+
 $path = $_GET['path'] ?? '';
 
 // 根据路径分发请求到相应的控制器

@@ -1,26 +1,17 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-ini_set('log_errors', 1);
-ini_set('error_log', __DIR__ . '/../../error.log');
+// 加载初始化文件
+$config = require_once __DIR__ . '/../init.php';
 
-require_once __DIR__ . '/../config.php';
-require_once __DIR__ . '/../Service/encryption.php';
-require_once __DIR__ . '/../Service/file_manager.php';
-
-$config = require 'config.php';
+// 创建服务实例
 $fileManager = new FileManager($config['storage_dir'], new Encryption($config['encryption_key']));
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Content-Type: application/json');
-    http_response_code(405);
-    echo json_encode(['success' => false, 'error' => '方法不允许']);
-    exit;
+    ResponseHandler::error('方法不允许', 405, 405);
 }
 
 try {
     if (empty($_FILES['file']['tmp_name'])) {
-        throw new Exception("上传的文件为空");
+        ResponseHandler::error("上传的文件为空");
     }
 
     $file = $_FILES['file'];
@@ -29,15 +20,10 @@ try {
     $fileId = $fileManager->uploadFile($file, $fileName);
     $files = $fileManager->getFileList();
 
-    header('Content-Type: application/json');
-    echo json_encode([
-        'success' => true,
-        'message' => '文件上传成功',
+    ResponseHandler::success([
         'fileId' => $fileId,
         'files' => $files
-    ]);
+    ], '文件上传成功');
 } catch (Exception $e) {
-    header('Content-Type: application/json');
-    http_response_code(400);
-    echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+    ResponseHandler::error($e->getMessage());
 }

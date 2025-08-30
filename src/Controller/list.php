@@ -1,21 +1,12 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-ini_set('log_errors', 1);
-ini_set('error_log', __DIR__ . '/../../error.log');
+// 加载初始化文件
+$config = require_once __DIR__ . '/../init.php';
 
-require_once __DIR__ . '/../config.php';
-require_once __DIR__ . '/../Service/encryption.php';
-require_once __DIR__ . '/../Service/file_manager.php';
-
-$config = require 'config.php';
+// 创建服务实例
 $fileManager = new FileManager($config['storage_dir'], new Encryption($config['encryption_key']));
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
-    header('Content-Type: application/json');
-    http_response_code(405);
-    echo json_encode(['success' => false, 'error' => '方法不允许']);
-    exit;
+    ResponseHandler::error('方法不允许', 405, 405);
 }
 
 $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
@@ -30,14 +21,11 @@ try {
         $files = $fileManager->getFileList($offset, $limit);
         $totalFiles = $fileManager->getTotalFiles();
     }
-    header('Content-Type: application/json');
-    echo json_encode([
-        'success' => true,
+    
+    ResponseHandler::success([
         'files' => $files,
         'totalFiles' => $totalFiles
     ]);
 } catch (Exception $e) {
-    header('Content-Type: application/json');
-    http_response_code(500);
-    echo json_encode(['success' => false, 'error' => '获取文件列表失败: ' . $e->getMessage()]);
+    ResponseHandler::error('获取文件列表失败: ' . $e->getMessage(), 500, 500);
 }
