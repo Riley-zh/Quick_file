@@ -11,7 +11,8 @@ class FileManager {
 
         if (!is_dir($this->storageDir)) {
             if (!mkdir($this->storageDir, 0755, true)) {
-                throw new Exception("无法创建存储目录: " . $this->storageDir);
+                // 如果目录无法创建，记录日志但不抛出异常
+                error_log("无法创建存储目录: " . $this->storageDir);
             }
         }
     }

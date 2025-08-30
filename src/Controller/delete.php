@@ -1,6 +1,7 @@
 <?php
 // 加载初始化文件
-$config = require_once __DIR__ . '/../init.php';
+require_once __DIR__ . '/../init.php';
+$config = require __DIR__ . '/../config.php';
 
 // 创建服务实例
 $fileManager = new FileManager($config['storage_dir'], new Encryption($config['encryption_key']));
